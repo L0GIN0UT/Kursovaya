@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Социальный граф ВК — Старт</title>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header>
+    <h1>Социальный Граф ВКонтакте</h1>
+</header>
+<main>
+    <div id="description">
+        <p>Добро пожаловать в приложение "Социальный Граф ВКонтакте"! Это приложение позволяет визуализировать ваш социальный граф или граф любого другого пользователя ВКонтакте.</p>
+        <p>Введите ID пользователя ВКонтакте и нажмите "Показать граф". Приложение соберёт данные о друзьях и отобразит их в виде интерактивного графа.</p>
+    </div>
+    <form id="user-form">
+        <label for="user_id">ID пользователя ВК:</label><br/>
+        <input type="text" id="user_id" name="user_id" placeholder="Например: 123456789" required/><br/><br/>
+        <button type="submit">Показать граф</button>
+    </form>
+    <!-- Индикатор загрузки -->
+    <div id="loader" class="hidden">
+        <div class="spinner"></div>
+        <p>Сбор данных...</p>
+    </div>
+    <!-- Сообщение об ошибке -->
+    <div id="error-message" class="hidden">
+        <p>Произошла ошибка при сборе данных. Попробуйте снова.</p>
+    </div>
+</main>
+<footer>
+    © 2024 Социальный Граф
+</footer>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
