@@ -26,8 +26,8 @@
 Сначала клонируйте репозиторий на вашу машину:
 
 ```bash
-git clone https://github.com/username/social-graph-vk.git
-cd social-graph-vk
+git clone https://github.com/L0GIN0UT/Kursovaya.git
+cd Название_папки_проекта
 ```
 
 ### Шаг 2: Создание виртуального окружения
