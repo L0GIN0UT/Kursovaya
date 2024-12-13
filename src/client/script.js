@@ -1,6 +1,4 @@
-// src/client/script.js
-
-let selectedNode = null; // Хранит данные о текущем выбранном узле или null если нет выбранного
+let selectedNode = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('user-form');
@@ -81,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// Функция отрисовки графа
 function renderGraph(graph) {
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -92,25 +91,22 @@ function renderGraph(graph) {
     const svg = d3.select("#graph").append("svg")
         .attr("width", width)
         .attr("height", height)
-        .call(zoomBehavior); // возможность зумирования
+        .call(zoomBehavior);
 
     const svgGroup = svg.append("g");
 
-    const mainUserId = graph.nodes[0].id;
-
     const linkForce = d3.forceLink(graph.links)
         .id(d => d.id)
-        .distance(400); // Увеличили расстояние между узлами
+        .distance(400);
 
     const simulation = d3.forceSimulation(graph.nodes)
         .force("link", linkForce)
-        .force("charge", d3.forceManyBody().strength(-1200)) // Сильнее отталкивание
+        .force("charge", d3.forceManyBody().strength(-1200))
         .force("center", d3.forceCenter(width / 2, height / 2))
-        .force("collide", d3.forceCollide().radius(80)) // Увеличен радиус столкновений
-        .alphaDecay(0.03) // Чуть более медленное затухание, чтобы узлы лучше разлетелись
+        .force("collide", d3.forceCollide().radius(80))
+        .alphaDecay(0.03)
         .on("tick", ticked)
         .on("end", () => {
-            // Когда симуляция завершилась, подгоним масштаб, чтобы весь граф влез на экран
             fitGraphToView();
         });
 
@@ -129,20 +125,14 @@ function renderGraph(graph) {
         .attr("class", "node")
         .on("click", (event, d) => {
             if (selectedNode && selectedNode.id === d.id) {
-                // Повторный клик - снять выделение
                 resetHighlight(node, link);
                 selectedNode = null;
+                closePopup();
             } else {
-                // Новый выбор
                 resetHighlight(node, link);
-
                 d3.select(event.currentTarget).classed("highlighted-node", true);
 
-                d3.select(event.currentTarget).select("text")
-                    .text(`${d.first_name} ${d.last_name} (ID: ${d.id})`);
-
                 const connectedLinks = graph.links.filter(l => l.source.id === d.id || l.target.id === d.id);
-
                 connectedLinks.forEach(l => {
                     link.filter(dl => dl === l).classed("highlighted-link", true);
 
@@ -150,21 +140,27 @@ function renderGraph(graph) {
                     node.filter(dn => dn.id === connectedNodeId).classed("highlighted-node", true);
                 });
 
+                node.classed("dimmed", true); // Затемняем остальные узлы
+                link.classed("dimmed", true); // Затемняем остальные связи
+                d3.select(event.currentTarget).classed("highlighted-node", true); // Подсвечиваем выбранный узел
                 selectedNode = d;
+                showPopup(d);
             }
         });
 
-    node.append("circle")
-        .attr("r", d => d.id === mainUserId ? 15 : 10)
-        .attr("fill", d => d.id === mainUserId ? "#ff165d" : "#00b8a9")
-        .attr("stroke", "#fff")
-        .attr("stroke-width", 2);
-    // Убрали вызов d3.drag(), чтобы нельзя было двигать узлы
+    // Добавление аватарок в узлы
+    node.append("image")
+        .attr("xlink:href", d => d.photo_200)
+        .attr("x", -25)
+        .attr("y", -25)
+        .attr("width", 50)
+        .attr("height", 50)
+        .attr("clip-path", "circle(50%)");
 
     node.append("text")
         .text(d => `${d.first_name} ${d.last_name}`)
-        .attr("x", 18)
-        .attr("y", 5)
+        .attr("x", 0)
+        .attr("y", 35)
         .attr("font-size", "12px")
         .attr("fill", "#333")
         .attr("font-weight", "600");
@@ -183,7 +179,6 @@ function renderGraph(graph) {
             .attr("transform", d => `translate(${d.x},${d.y})`);
     }
 
-    // Функция подгонки масштаба, чтобы граф целиком влез в окно
     function fitGraphToView() {
         const bounds = svgGroup.node().getBBox();
         const fullWidth = window.innerWidth;
@@ -205,8 +200,54 @@ function renderGraph(graph) {
     }
 }
 
+// Функция для показа POP-UP
+function showPopup(user) {
+    const popup = document.getElementById("popup");
+    const userAvatar = document.getElementById("user-avatar");
+    const userName = document.getElementById("user-name");
+    const userBdate = document.getElementById("user-bdate");
+    const userGender = document.getElementById("user-gender");
+
+    userAvatar.src = user.photo_200;
+    userName.textContent = `${user.first_name} ${user.last_name}`;
+    userBdate.textContent = formatDate(user.bdate) || "Не указано";
+    userGender.textContent = user.gender === 1 ? "Женский" : user.gender === 2 ? "Мужской" : "Не указан";
+
+    popup.style.display = "block";
+}
+
+// Функция для закрытия POP-UP
+function closePopup() {
+    const popup = document.getElementById("popup");
+    popup.style.display = "none";
+    resetHighlight(d3.selectAll('.node'), d3.selectAll('line'));
+}
+
+// Закрытие POP-UP при клике на крестик или за его пределами
+document.getElementById("close-popup").addEventListener("click", closePopup);
+window.addEventListener("click", (e) => {
+    const popup = document.getElementById("popup");
+    if (e.target === popup || e.target === document.getElementById("overlay")) {
+        closePopup();
+    }
+});
+
 function resetHighlight(node, link) {
-    node.classed("highlighted-node", false);
-    link.classed("highlighted-link", false);
+    node.classed("highlighted-node", false).classed("dimmed", false);
+    link.classed("highlighted-link", false).classed("dimmed", false);
     node.select("text").text(d => `${d.first_name} ${d.last_name}`);
+}
+
+// Функция для форматирования даты
+function formatDate(date) {
+    if (!date) return 'xx.xx.xxxx';
+    const parts = date.split('.');
+    if (parts.length === 1) {
+        return `0${parts[0]}.xx.xx`;
+    } else if (parts.length === 2) {
+        return `0${parts[0]}.${parts[1]}.xxxx`;
+    } else if (parts.length === 3) {
+        return `${String(parts[0]).padStart(2, '0')}.${String(parts[1]).padStart(2, '0')}.${parts[2]}`;
+    }
+    return date;
 }

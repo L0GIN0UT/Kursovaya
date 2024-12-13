@@ -1,5 +1,4 @@
-/* src/client/style.css */
-
+/* Общие стили для тела страницы */
 body {
     margin: 0;
     padding: 0;
@@ -104,24 +103,99 @@ main {
     border-radius: 10px;
 }
 
-.node text {
-    pointer-events: none;
+/* Стили для узлов */
+.node circle {
+    cursor: pointer;
+    stroke: #fff;
+    stroke-width: 2;
 }
 
 .node circle:hover {
     stroke: #ff9a00;
     stroke-width: 3;
-    cursor: pointer;
 }
 
-.highlighted-node circle {
+.node text {
+    pointer-events: none;
+    font-size: 14px;
+    font-weight: bold;
+    fill: #333;
+}
+
+.node img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
+
+/* Затемнение остальных узлов и связей при выборе */
+.node.dimmed {
+    opacity: 0.3;
+}
+
+.link.dimmed {
+    opacity: 0.2;
+}
+
+/* Подсвечивание выбранных узлов и связей */
+.node.highlighted-node {
     stroke: #ff9a00;
     stroke-width: 3;
 }
 
-.highlighted-link {
-    stroke: #ff9a00 !important;
-    stroke-width: 3 !important;
+.link.highlighted-link {
+    stroke: #ff9a00;
+    stroke-width: 2;
+}
+
+/* Стили для Pop-up окна */
+#popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 20px;
+    width: 300px;
+    z-index: 1000;
+    display: none;
+}
+
+#popup-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#user-avatar {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+}
+
+#user-name {
+    margin: 10px 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+#user-bdate, #user-gender {
+    font-size: 14px;
+    color: #555;
+}
+
+#close-popup {
+    align-self: flex-end;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    padding: 5px;
+}
+
+#close-popup:hover {
+    color: #ff165d;
 }
 
 footer {
