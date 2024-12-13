@@ -54,7 +54,7 @@ source venv/bin/activate
 Установите все необходимые зависимости, указанные в файле requirements.txt:
 
 ```bash
-pip install -r requirements.txt
+pip install -r src/requirements.txt
 ```
 
 ## Запуск проекта
@@ -64,7 +64,7 @@ pip install -r requirements.txt
 После установки зависимостей запустите сервер с помощью Flask:
 
 ```bash
-python src/server/app.py
+python -m src.server.app
 ```
 
 По умолчанию сервер будет доступен по адресу http://127.0.0.1:5000
