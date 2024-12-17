@@ -3,22 +3,35 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Социальный граф ВК</title>
+    <title>Социальный граф ВКонтакте</title>
     <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-    <header>
-        <h1>Социальный Граф ВКонтакте</h1>
-    </header>
-    <main>
-        <div id="graph-container">
-            <div id="graph"></div>
-        </div>
-    </main>
-    <footer>
-        © 2024 Социальный Граф
-    </footer>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="script.js"></script>
+<header>
+    <h1>Социальный Граф</h1>
+    <img src="./img/VK Text Logo White.png" alt="logo">
+</header>
+<main>
+    <div id="graph-container">
+        <div id="graph"></div>
+    </div>
+</main>
+<footer>
+    © 2024 Социальный Граф
+</footer>
+
+<!-- POP-UP окно для дополнительной информации о пользователе -->
+<div id="overlay" class="hidden"></div>
+<div id="popup" class="hidden">
+    <div id="popup-content">
+        <span id="close-popup" class="close">&times;</span>
+        <h2 id="user-name"></h2>
+        <img id="user-avatar" src="" alt="Аватар" />
+        <p><strong>Дата рождения:</strong> <span id="user-bdate"></span></p>
+        <p><strong>Пол:</strong> <span id="user-gender"></span></p>
+    </div>
+</div>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
