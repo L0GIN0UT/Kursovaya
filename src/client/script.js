@@ -245,7 +245,8 @@ function resetHighlight(nodes, links) {
 function formatDate(dateString) {
     if (!dateString) return "";
     const dateParts = dateString.split(".");
-    if (dateParts.length === 1) return dateParts[0]; // Если только день и месяц
-    if (dateParts.length === 3) return `${dateParts[0]}.${dateParts[1]}.${dateParts[2]}`; // ДД.ММ.ГГГГ
+    const padWithZero = (num) => (num.length === 1 ? '0' + num : num); // Функция для добавления ведущего нуля
+    if (dateParts.length === 2) return `${padWithZero(dateParts[0])}.${padWithZero(dateParts[1])}.XXXX`; // Если указаны только день и месяц, добавляем "XXXX" в качестве года
+    if (dateParts.length === 3) return `${padWithZero(dateParts[0])}.${padWithZero(dateParts[1])}.${dateParts[2]}`; // Формат ДД.ММ.ГГГГ, добавляем ведущие нули для дня и месяца
     return dateString; // На случай если дата не соответствует формату
 }
